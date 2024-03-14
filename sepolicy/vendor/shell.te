@@ -1,2 +1,0 @@
-allow shell kernel:system syslog_read;
-allow shell self:dir write;

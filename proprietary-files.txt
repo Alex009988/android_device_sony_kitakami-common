@@ -5,10 +5,8 @@ vendor/lib/libadsprpc.so
 vendor/lib/libfastcvopt.so
 
 # Audio
-lib/libaudioresampler.so
 lib/soundfx/libsonypostprocbundle.so
 lib/soundfx/libsonysweffect.so
-lib64/libaudioresampler.so
 vendor/lib/libacdb-fts.so
 vendor/lib/libacdbloader.so
 vendor/lib/libacdbrtac.so
@@ -76,10 +74,10 @@ vendor/lib/egl/libGLESv1_CM_adreno.so|12559bdb260be99259c5114eb18141a6f55ec5c6
 vendor/lib/egl/libGLESv2_adreno.so|99b5d3351ff74dd80ce8788d8cf813f795c004d3
 vendor/lib/egl/libq3dtools_adreno.so|32f28df5844ed9826af5a77d7519db6b5db93ceb
 vendor/lib/egl/libq3dtools_esx.so|a7e233d9d6c3d61fa9b762e5c4c1772a5223ba14
-vendor/lib/hw/vulkan.msm8994.so|8bd98116b5a586839aad4c93468fc04f044d4ef4
+vendor/lib/hw/vulkan.msm8994.so|8bd98116b5a586839aad4c93468fc04f044d4ef4:vendor/lib/vulkan.msm8994.so
 vendor/lib/libC2D2.so|668aaec9820480a9f1b04a6994be28bc4fef5677
 vendor/lib/libCB.so|ced7d5bfdbb5b5c0cb2b69e67942d568bedff4d5
-# vendor/lib/libRSDriver_adreno.so|ee3386248adfa7d1a8c1107e051bcbbd3e8df0c1
+vendor/lib/libRSDriver_adreno.so|ee3386248adfa7d1a8c1107e051bcbbd3e8df0c1
 vendor/lib/libadreno_utils.so|4fd27f46943412ddbb69c4e32059a3a765db8b9a
 vendor/lib/libbccQTI.so|7cd380e1ce6c80fa57bec7d9f81f7826382ccea7
 vendor/lib/libc2d30-a4xx.so|e9e4975a5e16e1799cd1883bbb8905ce4b51aa7c
@@ -88,8 +86,8 @@ vendor/lib/libllvm-glnext.so|18ecddeb137e38ca12563a2b3a39dd2f6df1f68b
 vendor/lib/libllvm-qcom.so|ab8604edbedb9db19ac9f0cfbeb4473adf20b2c5
 vendor/lib/libllvm-qgl.so|ffd2e9c41d8976bf259b6463a1690a516daa458f
 vendor/lib/libmm-disp-apis.so|5475bf3d21201ce75597202ce81c4b15ce5b6868
-#vendor/lib/librs_adreno.so|bb1d5cb84f14ed18fcbfb4815692cb196e44f180
-#vendor/lib/librs_adreno_sha1.so|be8a817743950dac6e22b50cbd9657c2d35c35f2
+vendor/lib/librs_adreno.so|bb1d5cb84f14ed18fcbfb4815692cb196e44f180
+vendor/lib/librs_adreno_sha1.so|be8a817743950dac6e22b50cbd9657c2d35c35f2
 vendor/lib/libscale.so|9c1044395f1a93b10d3f85ce3123a73676b1bac5
 vendor/lib64/egl/eglSubDriverAndroid.so|03e2c66eebed80a91b08e2c18d011844682bdd7b
 vendor/lib64/egl/libEGL_adreno.so|3193346e9938e05ce611db0d0f9e456009289ebd
@@ -97,7 +95,7 @@ vendor/lib64/egl/libGLESv1_CM_adreno.so|e429adb54d16ea1e359bc0a56b0a3a7336989a77
 vendor/lib64/egl/libGLESv2_adreno.so|f072b33a708cc81de6e6a2d09741696f8c9ce034
 vendor/lib64/egl/libq3dtools_adreno.so|c5fcb698418bf5aedb15e6cf87a6d649b7f09aba
 vendor/lib64/egl/libq3dtools_esx.so|82abcc5b16842e5ec32c1cdc6745c1e36f31d63e
-vendor/lib64/hw/vulkan.msm8994.so|123f72ad06ab296028dc5d14884453630676027f
+vendor/lib64/hw/vulkan.msm8994.so|123f72ad06ab296028dc5d14884453630676027f:vendor/lib64/vulkan.msm8994.so
 vendor/lib64/libC2D2.so|da5c955221f736361a3646870600744756a6bd87
 vendor/lib64/libCB.so|7bd8ce62b1f4e52b162481d89b9f4af5e94d588f
 vendor/lib64/libRSDriver_adreno.so|05d94ad793ba74c1f6635762eb7871a611001c9c
@@ -166,6 +164,7 @@ vendor/lib64/libmm-qdcm.so
 
 # Secd
 bin/secd
+bin/iddd
 lib/lib_asb_tee.so
 lib/libcredential-manager-service.so
 lib/libdevice_security.so
@@ -265,4 +264,3 @@ vendor/bin/hw/android.hardware.drm@1.1-service.widevine|320749f5ce293176b9de747d
 vendor/etc/init/android.hardware.drm@1.1-service.widevine.rc|5a01d337c1d375ee24a6c8992ba91f54afb7637e
 vendor/lib64/libwvhidl.so|0c50c3cd9985fbda6a17d961f8618e6e62e545ab
 vendor/lib/mediadrm/libwvdrmengine.so|dfea94d70883876ba532facc079a34b9845ea401
-
