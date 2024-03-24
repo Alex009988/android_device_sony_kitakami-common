@@ -125,7 +125,7 @@ PRODUCT_PACKAGES += \
 
 # Camera
 PRODUCT_PACKAGES += \
-    android.hardware.camera.provider@2.4-impl-kitakami \
+    android.hardware.camera.provider@2.4-impl-z4 \
     camera.msm8994 \
     cameraserver_kitakami \
     Snap \
