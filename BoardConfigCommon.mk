@@ -156,7 +156,6 @@ DEVICE_MANIFEST_FILE := $(COMMON_PATH)/manifest.xml
 PRODUCT_ENFORCE_VINTF_MANIFEST_OVERRIDE := true
 
 ifneq ($(BOARD_HAVE_RADIO),false)
-DEVICE_MANIFEST_FILE += $(COMMON_PATH)/manifest_radio.xml
 DEVICE_FRAMEWORK_COMPATIBILITY_MATRIX_FILE += \
        $(COMMON_PATH)/device_framework_compatibility_matrix.xml
 endif
@@ -219,15 +218,6 @@ TARGET_LD_SHIM_LIBS := \
      /system/lib64/libsys-utils.so|libshim_sensors.so \
      /system/lib/libcammw.so|libshim_sensors.so \
      /system/vendor/lib64/libmm-abl.so|libshims_postproc.so
-
-ifneq ($(BOARD_HAVE_RADIO),false)
-TARGET_LD_SHIM_LIBS += \
-     /system/vendor/lib64/lib-imsvt.so|libshims_ims.so \
-     /system/vendor/lib64/lib-imsdpl.so|libshims_boringssl.so \
-     /system/lib64/lib-imsvideocodec.so|libui_shim.so \
-     /system/product/lib64/libimsmedia_jni.so|libshim_libimsmedia.so \
-     /system/lib64/lib-imsvt.so|libshim_libimsmedia.so
-endif
 
 # SELinux
 #include device/qcom/sepolicy-legacy/sepolicy.mk
