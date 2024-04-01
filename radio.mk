@@ -25,13 +25,6 @@ PRODUCT_COPY_FILES += \
 PRODUCT_PACKAGES += \
     libqdMetaData.system
 
-# RCS
-PRODUCT_PACKAGES += \
-    rcs_service_aidl \
-    rcs_service_aidl.xml \
-    rcs_service_api \
-    rcs_service_api.xml
-
 # RIL
 PRODUCT_PACKAGES += \
     android.hardware.radio@1.2-radio-service \
@@ -40,10 +33,6 @@ PRODUCT_PACKAGES += \
     android.hardware.radio.config@1.2.vendor \
     android.hardware.radio.deprecated@1.0.vendor \
     android.hardware.secure_element@1.2.vendor
-
-# Telephony
-PRODUCT_PACKAGES += \
-    telephony-ext
 
 # Properties
 PRODUCT_PROPERTY_OVERRIDES += \

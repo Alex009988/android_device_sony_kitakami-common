@@ -274,9 +274,6 @@ on boot
 on post-fs
 
 on post-fs-data
-    # Fingerprint data folder
-    mkdir /data/fpc 0770 system system
-
     #Secd
     mkdir /data/credmgr 0770 system oem_2996
 
