@@ -42,7 +42,8 @@ on early-init
 
 on init
     mkdir /persist/data 0700 system system
-
+	# E system_server: open failed: /dev/mdm: No such file or directory
+    mkdir /dev/mdm 0775 system system
     wait /dev/block/mmcblk0p1
     chown oem_2997 oem_2997 /dev/block/mmcblk0p1
     chmod 0770 /dev/block/mmcblk0p1
@@ -437,6 +438,8 @@ on post-fs-data
     chmod 2755 /data/misc/perfd
     mkdir /data/system/perfd 0770 root system
     chmod 2770 /data/system/perfd
+	rm /data/system/perfd/default_values
+    start perfd
 
     # SONY: Camera
     mkdir /data/camera 0770 media camera
@@ -557,21 +560,21 @@ on property:sys.listeners.registered=*
     setprop sys.keymaster.loaded ${vendor.sys.listeners.registered}
     setprop vendor.sys.keymaster.loaded ${vendor.sys.listeners.registered}
 
-service vendor.perfd /vendor/bin/perfd
+service vendor.perfd /system/vendor/bin/perfd
     class main
     user root
-    group root readproc
+    group system
     disabled
+    socket perfd seqpacket 0666 root system
     writepid /dev/cpuset/system-background/tasks
 
-service thermal-engine /vendor/bin/thermal-engine
-    class main
-    user root
-    socket thermal-send-client stream 0666 system system
-    socket thermal-recv-client stream 0660 system system
-    socket thermal-recv-passive-client stream 0666 system system
-    group root
-    writepid /dev/cpuset/system-background/tasks
+service thermal-engine /system/vendor/bin/thermal-engine
+   class main
+   user root
+   group root
+   socket thermal-send-client stream 0666 system system
+   socket thermal-recv-client stream 0660 system system
+   socket thermal-recv-passive-client stream 0666 system system
 
 service adsprpcd /system/bin/adsprpcd
    class main
@@ -727,7 +730,6 @@ service cameraserver /system/bin/cameraserver_kitakami
 on property:sys.boot_completed=1
     rm /data/system/perfd/default_values
     start vendor.perfd
-    trigger enable-low-power
 
 on property:service.usb.otg.switch=check
     write /sys/module/qpnp_smbcharger_extension/parameters/start_id_polling 1
