@@ -1,2 +1,0 @@
-allow nfc device:chr_file create_file_perms;
-allow nfc system_data_file:file create_file_perms;

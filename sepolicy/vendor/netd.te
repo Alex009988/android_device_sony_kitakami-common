@@ -1,1 +1,1 @@
-allow netd sysfs:file rw_file_perms;
+allow netd device:file { open write };
