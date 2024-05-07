@@ -63,12 +63,20 @@ PRODUCT_COPY_FILES += \
     frameworks/native/data/etc/android.hardware.vulkan.level-0.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.vulkan.level.xml \
     frameworks/native/data/etc/android.hardware.vulkan.version-1_0_3.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.vulkan.version.xml
 
+# ANT+
+PRODUCT_PACKAGES += \
+    AntHalService \
+    com.dsi.ant.antradio_library \
+    libantradio
+
 # APEX
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/ld.config.txt:$(TARGET_COPY_OUT_SYSTEM)/etc/swcodec/ld.config.txt
 
 # Audio
 PRODUCT_PACKAGES += \
+    audiod \
+    audio.a2dp.default \
     audio.bluetooth.default \
     android.hardware.audio@2.0-impl \
     android.hardware.audio@6.0-impl \
@@ -77,7 +85,7 @@ PRODUCT_PACKAGES += \
     android.hardware.audio.service \
     android.hardware.audio.effect@2.0-impl \
     android.hardware.audio.effect@6.0-impl \
-    android.hardware.bluetooth.audio-impl \
+    android.hardware.bluetooth.audio@2.0-impl \
     android.hardware.soundtrigger@2.0-impl \
     audio.primary.msm8994 \
     audio.r_submix.default \
@@ -89,7 +97,8 @@ PRODUCT_PACKAGES += \
 
 # Audio configuration
 PRODUCT_COPY_FILES += \
-    $(LOCAL_PATH)/audio/audio_effects.conf:$(TARGET_COPY_OUT_VENDOR)/etc/audio_effects.conf \
+	$(LOCAL_PATH)/audio/aanc_tuning_mixer.txt:$(TARGET_COPY_OUT_VENDOR)/etc/aanc_tuning_mixer.txt \
+    $(LOCAL_PATH)/audio/audio_effects.xml:$(TARGET_COPY_OUT_VENDOR)/etc/audio_effects.xml \
     $(LOCAL_PATH)/audio/audio_output_policy.conf:$(TARGET_COPY_OUT_VENDOR)/etc/audio_output_policy.conf \
     $(LOCAL_PATH)/audio/audio_platform_info.xml:$(TARGET_COPY_OUT_VENDOR)/etc/audio_platform_info.xml \
     $(LOCAL_PATH)/audio/audio_policy_configuration.xml:$(TARGET_COPY_OUT_VENDOR)/etc/audio_policy_configuration.xml \
@@ -111,14 +120,16 @@ PRODUCT_COPY_FILES += \
 PRODUCT_PACKAGES += \
     android.hardware.bluetooth@1.0-impl \
     android.hardware.bluetooth@1.0-service \
+    android.hardware.bluetooth@1.0.vendor \
+    android.hardware.bluetooth@1.1.vendor \
     libbt-vendor
 
 # Camera
 PRODUCT_PACKAGES += \
-    android.hardware.camera.provider@2.4-impl-kitakami \
+    android.hardware.camera.provider@2.4-impl-z4 \
     camera.msm8994 \
     cameraserver_kitakami \
-    Aperture \
+    Snap \
     vendor.qti.hardware.camera.device@1.0 \
     vendor.qti.hardware.camera.device@1.0_vendor
 
@@ -129,6 +140,10 @@ PRODUCT_PACKAGES += charger_res_images
 PRODUCT_PACKAGES += \
     disable_configstore
 
+# CryptfsHW
+PRODUCT_PACKAGES += \
+    vendor.qti.hardware.cryptfshw@1.0-service-qti.qsee
+
 # Data services
 PRODUCT_PACKAGES += \
     librmnetctl
@@ -137,6 +152,7 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
     android.hardware.drm@1.0-impl \
     android.hardware.drm@1.0-service \
+    android.hardware.drm@1.4.vendor \
     android.hardware.drm@1.4-service.clearkey
 
 # Display
@@ -147,6 +163,7 @@ PRODUCT_PACKAGES += \
     android.hardware.graphics.mapper@2.0-impl-2.1 \
     android.hardware.memtrack@1.0-impl \
     android.hardware.memtrack@1.0-service \
+    android.frameworks.displayservice@1.0.vendor \
     copybit.msm8994 \
     gralloc.msm8994 \
     hwcomposer.msm8994 \
@@ -177,6 +194,8 @@ PRODUCT_PACKAGES += \
     sap.conf
 
 PRODUCT_PACKAGES += \
+    android.hardware.gnss@1.1.vendor \
+    android.hardware.gnss@2.1.vendor \
     android.hardware.gnss@1.0-impl
 
 # Flash LED config
@@ -191,18 +210,14 @@ PRODUCT_PACKAGES += \
 # HIDL
 PRODUCT_PACKAGES += \
     android.hidl.base@1.0 \
+    android.hidl.base@1.0_system \
     android.hidl.manager@1.0 \
+    android.hidl.manager@1.0-java \
     libhidltransport \
+    libhidltransport.vendor \
     libhwbinder \
+    libhwbinder.vendor \
     vndservicemanager
-
-# IMS
-PRODUCT_PACKAGES += \
-    libbase_shim \
-    libshim_ui \
-    libshims_ims \
-    libshim_libimsmedia \
-    libshims_boringssl
 
 # Init
 PRODUCT_COPY_FILES += \
@@ -228,6 +243,8 @@ PRODUCT_COPY_FILES += \
 PRODUCT_PACKAGES += \
     android.hardware.keymaster@3.0-impl \
     android.hardware.keymaster@3.0-service \
+    android.hardware.gatekeeper@1.0.vendor \
+    android.hardware.keymaster@4.1.vendor
 
 # Lights
 PRODUCT_PACKAGES += \
@@ -246,16 +263,23 @@ PRODUCT_PACKAGES += \
 # Media
 PRODUCT_PACKAGES += \
     libc2dcolorconvert \
+    libdashplayer \
+    libdivxdrmdecrypt \
+    libextmedia_jni \
     libOmxAacEnc \
     libOmxAmrEnc \
     libOmxCore \
     libOmxEvrcEnc \
     libOmxQcelp13Enc \
+    libOmxSwVencMpeg4 \
+    libOmxSwVencHevc \
     libOmxVdec \
+    libOmxVdecHevc \
     libOmxVenc \
     libOmxVidcCommon \
     libstagefrighthw \
-    libstagefright_soft_flacdec
+    libstagefright_soft_flacdec \
+    android.hardware.media.c2@1.0.vendor
 
 PRODUCT_COPY_FILES += \
     frameworks/av/media/libstagefright/data/media_codecs_google_audio.xml:$(TARGET_COPY_OUT_VENDOR)/etc/media_codecs_google_audio.xml \
@@ -267,7 +291,12 @@ PRODUCT_COPY_FILES += \
 
 # Net
 PRODUCT_PACKAGES += \
-    libandroid_net
+    libandroid_net \
+    android.system.net.netd@1.1.vendor
+
+# Neuralnetworks
+PRODUCT_PACKAGES += \
+    android.hardware.neuralnetworks@1.3.vendor
 
 # NFC
 PRODUCT_PACKAGES += \
@@ -305,6 +334,10 @@ PRODUCT_COPY_FILES += \
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/public.libraries.txt:$(TARGET_COPY_OUT_VENDOR)/etc/public.libraries.txt
 
+# Recovery
+PRODUCT_PACKAGES += \
+    librecovery_updater_kitakami
+
 # RIL
 PRODUCT_PACKAGES += \
     libaudioclient_shim \
@@ -320,6 +353,7 @@ PRODUCT_COPY_FILES += \
 
 # Sensors
 PRODUCT_PACKAGES += \
+    android.frameworks.sensorservice@1.0.vendor \
     android.hardware.sensors@1.0-impl \
     libshim_sensors
 
@@ -356,6 +390,8 @@ PRODUCT_PACKAGES += \
 # Wifi
 PRODUCT_PACKAGES += \
     android.hardware.wifi@1.0-service.legacy \
+    android.hardware.wifi@1.5.vendor \
+    p2p_supplicant.conf \
     hostapd \
     libwifi-hal-bcm \
     libwpa_client \

@@ -42,7 +42,8 @@ on early-init
 
 on init
     mkdir /persist/data 0700 system system
-
+	# E system_server: open failed: /dev/mdm: No such file or directory
+    mkdir /dev/mdm 0775 system system
     wait /dev/block/mmcblk0p1
     chown oem_2997 oem_2997 /dev/block/mmcblk0p1
     chmod 0770 /dev/block/mmcblk0p1
@@ -132,6 +133,8 @@ on boot
     exec - root system -- /system/bin/init.qcom.power.sh
 
     # Bluetooth
+	write /data/etc/bluetooth_bdaddr "40:b8:37:65:7f:9f"
+	chmod 755 /data/etc/bluetooth_bdaddr
     chown bluetooth net_bt /sys/class/rfkill/rfkill0/type
     chown bluetooth net_bt /sys/class/rfkill/rfkill0/state
     chmod 0660 /sys/class/rfkill/rfkill0/state
@@ -149,16 +152,6 @@ on boot
     chmod 2770 /dev/socket/qmux_bluetooth
     mkdir /dev/socket/qmux_gps 0770 gps gps
     chmod 2770 /dev/socket/qmux_gps
-
-    # Required for fingerprint
-    chown system system /sys/bus/spi/devices/spi0.1/clk_enable
-    chmod 0660 /sys/bus/spi/devices/spi0.1/clk_enable
-    chown system system /sys/bus/spi/devices/spi0.1/spi_prepare
-    chmod 0660 /sys/bus/spi/devices/spi0.1/spi_prepare
-    chown system system /sys/bus/spi/devices/spi0.1/wakeup_enable
-    chmod 0660 /sys/bus/spi/devices/spi0.1/wakeup_enable
-    chown system system /sys/bus/spi/devices/spi0.1/irq
-    chmod 0660 /sys/bus/spi/devices/spi0.1/irq
 
     # add a cpuset for the camera daemon
     # we want all the little cores for camera
@@ -282,9 +275,6 @@ on boot
 on post-fs
 
 on post-fs-data
-    # Fingerprint data folder
-    mkdir /data/fpc 0770 system system
-
     #Secd
     mkdir /data/credmgr 0770 system oem_2996
 
@@ -448,6 +438,8 @@ on post-fs-data
     chmod 2755 /data/misc/perfd
     mkdir /data/system/perfd 0770 root system
     chmod 2770 /data/system/perfd
+	rm /data/system/perfd/default_values
+    start perfd
 
     # SONY: Camera
     mkdir /data/camera 0770 media camera
@@ -520,44 +512,6 @@ on enable-low-power
     chmod 0664 /sys/module/workqueue/parameters/power_efficient
     write /sys/module/workqueue/parameters/power_efficient Y
 
-service vendor.imsqmidaemon /system/vendor/bin/imsqmidaemon
-    class main
-    user system
-    socket ims_qmid stream 0660 system radio
-    group radio log diag
-    writepid /dev/cpuset/system-background/tasks
-
-service vendor.imsdatadaemon /system/vendor/bin/imsdatadaemon
-    class main
-    user system
-    socket ims_datad stream 0660 system radio
-    group system wifi radio inet log diag
-    disabled
-
-on property:vendor.ims.QMI_DAEMON_STATUS=1
-    start vendor.imsdatadaemon
-
-service vendor.ims_rtp_daemon /system/vendor/bin/ims_rtp_daemon
-    class main
-    user system
-    socket ims_rtpd stream 0660 system radio
-    group radio diag inet log
-    writepid /dev/cpuset/system-background/tasks
-
-service vendor.imsrcsservice /system/vendor/bin/imsrcsd
-   class main
-   user system
-   group radio diag inet log
-   writepid /dev/cpuset/system-background/tasks
-
-on property:vendor.ims.DATA_DAEMON_STATUS=1
-    restart vendor.ims_rtp_daemon
-
-service vendor.imscmservice /system/vendor/bin/imscmservice
-   class main
-   user system
-   group radio diag log
-
 service irsc_util /system/bin/irsc_util "/etc/sec_config"
     class main
     user root
@@ -606,21 +560,21 @@ on property:sys.listeners.registered=*
     setprop sys.keymaster.loaded ${vendor.sys.listeners.registered}
     setprop vendor.sys.keymaster.loaded ${vendor.sys.listeners.registered}
 
-service vendor.perfd /vendor/bin/perfd
+service vendor.perfd /system/vendor/bin/perfd
     class main
     user root
-    group root readproc
+    group system
     disabled
+    socket perfd seqpacket 0666 root system
     writepid /dev/cpuset/system-background/tasks
 
-service thermal-engine /vendor/bin/thermal-engine
-    class main
-    user root
-    socket thermal-send-client stream 0666 system system
-    socket thermal-recv-client stream 0660 system system
-    socket thermal-recv-passive-client stream 0666 system system
-    group root
-    writepid /dev/cpuset/system-background/tasks
+service thermal-engine /system/vendor/bin/thermal-engine
+   class main
+   user root
+   group root
+   socket thermal-send-client stream 0666 system system
+   socket thermal-recv-client stream 0660 system system
+   socket thermal-recv-passive-client stream 0666 system system
 
 service adsprpcd /system/bin/adsprpcd
    class main
@@ -776,7 +730,6 @@ service cameraserver /system/bin/cameraserver_kitakami
 on property:sys.boot_completed=1
     rm /data/system/perfd/default_values
     start vendor.perfd
-    trigger enable-low-power
 
 on property:service.usb.otg.switch=check
     write /sys/module/qpnp_smbcharger_extension/parameters/start_id_polling 1

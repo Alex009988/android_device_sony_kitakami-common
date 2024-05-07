@@ -31,20 +31,19 @@ TARGET_NO_BOOTLOADER := true
 # Platform
 TARGET_BOARD_PLATFORM := msm8994
 TARGET_BOARD_PLATFORM_GPU := qcom-adreno430
-PRODUCT_PLATFORM_SOD := true
 
 # Architecture
 TARGET_ARCH := arm64
 TARGET_ARCH_VARIANT := armv8-a
 TARGET_CPU_ABI := arm64-v8a
 TARGET_CPU_ABI2 :=
-TARGET_CPU_VARIANT := generic
+TARGET_CPU_VARIANT := cortex-a53
 
 TARGET_2ND_ARCH := arm
 TARGET_2ND_ARCH_VARIANT := armv8-a
 TARGET_2ND_CPU_ABI := armeabi-v7a
 TARGET_2ND_CPU_ABI2 := armeabi
-TARGET_2ND_CPU_VARIANT := generic
+TARGET_2ND_CPU_VARIANT := cortex-a53
 TARGET_2ND_CPU_VARIANT_RUNTIME := cortex-a53
 
 TARGET_USES_64_BIT_BINDER := true
@@ -128,6 +127,9 @@ MAX_EGL_CACHE_SIZE := 2048*1024
 HAVE_ADRENO_SOURCE := false
 OVERRIDE_RS_DRIVER := libRSDriver_adreno.so
 
+# Encryption
+TARGET_HW_DISK_ENCRYPTION := true
+
 # Extended filesystem support
 TARGET_EXFAT_DRIVER := sdfat
 
@@ -135,7 +137,7 @@ TARGET_EXFAT_DRIVER := sdfat
 TARGET_FS_CONFIG_GEN := $(COMMON_PATH)/config.fs
 
 # FM radio
-BOARD_HAVE_BCM_FM := false
+BOARD_HAVE_BCM_FM := true
 
 # BT/FM (Broadcom): Adjust the sysfs patch for 3.10 kernel
 BOARD_HAVE_BCM_FM_SYSFS := "/sys/bus/platform/drivers/bcm_ldisc/bcm_ldisc/"
@@ -154,7 +156,6 @@ DEVICE_MANIFEST_FILE := $(COMMON_PATH)/manifest.xml
 PRODUCT_ENFORCE_VINTF_MANIFEST_OVERRIDE := true
 
 ifneq ($(BOARD_HAVE_RADIO),false)
-DEVICE_MANIFEST_FILE += $(COMMON_PATH)/manifest_radio.xml
 DEVICE_FRAMEWORK_COMPATIBILITY_MATRIX_FILE += \
        $(COMMON_PATH)/device_framework_compatibility_matrix.xml
 endif
@@ -218,19 +219,9 @@ TARGET_LD_SHIM_LIBS := \
      /system/lib/libcammw.so|libshim_sensors.so \
      /system/vendor/lib64/libmm-abl.so|libshims_postproc.so
 
-ifneq ($(BOARD_HAVE_RADIO),false)
-TARGET_LD_SHIM_LIBS += \
-     /system/vendor/lib64/lib-imsvt.so|libshims_ims.so \
-     /system/vendor/lib64/lib-imsdpl.so|libshims_boringssl.so \
-     /system/lib64/lib-imsvideocodec.so|libshim_ui.so \
-     /system/product/lib64/libimsmedia_jni.so|libshim_libimsmedia.so \
-     /system/lib64/lib-imsvt.so|libshim_libimsmedia.so
-endif
-
 # SELinux
-#include device/qcom/sepolicy-legacy/sepolicy.mk
-#BOARD_SEPOLICY_DIRS += $(COMMON_PATH)/sepolicy/vendor
-BOARD_SEPOLICY_DIRS += $(COMMON_PATH)/sepolicy-minimal
+include device/qcom/sepolicy-legacy/sepolicy.mk
+BOARD_SEPOLICY_DIRS += $(COMMON_PATH)/sepolicy/vendor
 SELINUX_IGNORE_NEVERALLOWS := true
 
 # WiFi

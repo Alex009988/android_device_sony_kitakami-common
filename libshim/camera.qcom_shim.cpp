@@ -6,7 +6,6 @@
 #include <gui/BufferQueue.h>
 #include <gui/SurfaceComposerClient.h>
 #include <gui/ISurfaceComposer.h>
-#include <ui/LayerStack.h>
 #include <utils/Errors.h>
 #include <utils/String8.h>
 #include <utils/StrongPointer.h>
@@ -156,9 +155,7 @@ extern "C" void _ZN7android21SurfaceComposerClient20setDisplayProjectionERKNS_2s
 
 extern "C" void _ZN7android21SurfaceComposerClient20setDisplayLayerStackERKNS_2spINS_7IBinderEEEj(
     const sp<IBinder>& token, uint32_t layerStack){
-  android::ui::LayerStack newLayerStack;
-  newLayerStack.id = layerStack;
-  t->setDisplayLayerStack(token, newLayerStack);
+  t->setDisplayLayerStack(token, layerStack);
 }
 
 extern "C" status_t _ZN7android14SurfaceControl7setSizeEjj(uint32_t w, uint32_t h){
