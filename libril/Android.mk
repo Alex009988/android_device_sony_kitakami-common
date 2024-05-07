@@ -1,5 +1,7 @@
 # Copyright 2006 The Android Open Source Project
 
+ifeq ($(BOARD_PROVIDES_LIBRIL),true)
+
 LOCAL_PATH:= $(call my-dir)
 include $(CLEAR_VARS)
 
@@ -21,6 +23,7 @@ LOCAL_SHARED_LIBRARIES := \
     android.hardware.radio@1.0 \
     android.hardware.radio@1.1 \
     libhidlbase \
+    android.hardware.radio.deprecated@1.0
 
 LOCAL_STATIC_LIBRARIES := \
     libprotobuf-c-nano-enable_malloc-32bit \
@@ -52,3 +55,5 @@ LOCAL_NOTICE_FILE:= $(LOCAL_PATH)/NOTICE
 LOCAL_SANITIZE := integer
 
 include $(BUILD_SHARED_LIBRARY)
+
+endif # BOARD_PROVIDES_LIBRIL
