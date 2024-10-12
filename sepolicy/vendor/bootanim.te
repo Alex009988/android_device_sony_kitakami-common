@@ -1,1 +1,0 @@
-allow bootanim device:chr_file rw_file_perms;

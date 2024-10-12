@@ -23,6 +23,8 @@ BOARD_VENDOR := sony
 # Build
 BUILD_BROKEN_DUP_RULES := true
 BUILD_BROKEN_ELF_PREBUILT_PRODUCT_COPY_FILES := true
+RELAX_USES_LIBRARY_CHECK := true
+BUILD_BROKEN_INCORRECT_PARTITION_IMAGES := true
 
 # Bootloader
 TARGET_BOOTLOADER_BOARD_NAME := MSM8994
@@ -31,22 +33,22 @@ TARGET_NO_BOOTLOADER := true
 # Platform
 TARGET_BOARD_PLATFORM := msm8994
 TARGET_BOARD_PLATFORM_GPU := qcom-adreno430
+PRODUCT_PLATFORM_SOD := true
 
 # Architecture
 TARGET_ARCH := arm64
 TARGET_ARCH_VARIANT := armv8-a
 TARGET_CPU_ABI := arm64-v8a
 TARGET_CPU_ABI2 :=
-TARGET_CPU_VARIANT := cortex-a53
+TARGET_CPU_VARIANT := generic
 
 TARGET_2ND_ARCH := arm
 TARGET_2ND_ARCH_VARIANT := armv8-a
 TARGET_2ND_CPU_ABI := armeabi-v7a
 TARGET_2ND_CPU_ABI2 := armeabi
-TARGET_2ND_CPU_VARIANT := cortex-a53
+TARGET_2ND_CPU_VARIANT := generic
 TARGET_2ND_CPU_VARIANT_RUNTIME := cortex-a53
 
-TARGET_USES_64_BIT_BINDER := true
 TARGET_USES_64_BIT_BCMDHD := true
 
 ENABLE_CPUSETS := true
@@ -63,6 +65,10 @@ TARGET_KERNEL_ARCH := arm64
 TARGET_KERNEL_HEADER_ARCH := arm64
 TARGET_KERNEL_SOURCE := kernel/sony/msm8994
 TARGET_KERNEL_CLANG_COMPILE := false
+
+# APEX
+TARGET_FLATTEN_APEX := true
+OVERRIDE_TARGET_FLATTEN_APEX := true
 
 # Audio
 AUDIO_FEATURE_ENABLED_ACDB_LICENSE := true
@@ -89,15 +95,25 @@ USE_CUSTOM_AUDIO_POLICY := 1
 USE_XML_AUDIO_POLICY_CONF := 1
 
 # Bluetooth
+BOARD_BLUETOOTH_BDROID_BUILDCFG_INCLUDE_DIR := $(COMMON_PATH)/bluetooth
 BOARD_CUSTOM_BT_CONFIG := $(COMMON_PATH)/bluetooth/vnd_generic.txt
+BOARD_HAVE_BLUETOOTH := true
 BOARD_HAVE_BLUETOOTH_BCM := true
 
+# Camera
+BOARD_QTI_CAMERA_32BIT_ONLY := true
+TARGET_USES_MEDIA_EXTENSIONS := true
+USE_DEVICE_SPECIFIC_CAMERA := true
+
 TARGET_PROCESS_SDK_VERSION_OVERRIDE := \
+    /system/bin/cameraserver=25 \
+    /system/bin/cameraserver_kitakami=25 \
     /system/bin/mediaserver=25 \
     /system/bin/iddd=25 \
     /system/bin/secd=25 \
     /system/bin/tad_static=25 \
     /system/bin/loc_launcher=25 \
+    /system/bin/mm-qcamera-daemon=25 \
     /system/bin/sensors.qcom=25
 
 # Charger
@@ -124,7 +140,7 @@ TARGET_EXFAT_DRIVER := sdfat
 TARGET_FS_CONFIG_GEN := $(COMMON_PATH)/config.fs
 
 # FM radio
-BOARD_HAVE_BCM_FM := false
+BOARD_HAVE_BCM_FM := true
 
 # BT/FM (Broadcom): Adjust the sysfs patch for 3.10 kernel
 BOARD_HAVE_BCM_FM_SYSFS := "/sys/bus/platform/drivers/bcm_ldisc/bcm_ldisc/"
@@ -141,10 +157,12 @@ TARGET_PROVIDES_LIBLIGHT := true
 # HIDL
 DEVICE_MANIFEST_FILE := $(COMMON_PATH)/manifest.xml
 PRODUCT_ENFORCE_VINTF_MANIFEST_OVERRIDE := true
+DEVICE_FRAMEWORK_COMPATIBILITY_MATRIX_FILE := \
+    $(COMMON_PATH)/device_framework_compatibility_matrix.xml \
+    hardware/qcom-caf/common/vendor_framework_compatibility_matrix_legacy.xml
 
 ifneq ($(BOARD_HAVE_RADIO),false)
-DEVICE_FRAMEWORK_COMPATIBILITY_MATRIX_FILE += \
-       $(COMMON_PATH)/device_framework_compatibility_matrix.xml
+DEVICE_MANIFEST_FILE += $(COMMON_PATH)/manifest_radio.xml
 endif
 
 # Init
@@ -196,6 +214,8 @@ TARGET_USERIMAGES_USE_EXT4 := true
 
 # Shims
 TARGET_LD_SHIM_LIBS := \
+     /system/vendor/lib/hw/camera.vendor.msm8994.so|/system/lib/camera.qcom_shim.so \
+     /system/vendor/lib/hw/camera.vendor.msm8994.so|/system_ext/lib/libui_shim.so \
      /system/lib64/libsys-utils.so|libsensor.so \
      /system/lib/libcammw.so|libsensor.so \
      /system/bin/secd|/system/lib64/lib-preload64.so \
@@ -205,9 +225,19 @@ TARGET_LD_SHIM_LIBS := \
      /system/lib/libcammw.so|libshim_sensors.so \
      /system/vendor/lib64/libmm-abl.so|libshims_postproc.so
 
+ifneq ($(BOARD_HAVE_RADIO),false)
+TARGET_LD_SHIM_LIBS += \
+     /system/vendor/lib64/lib-imsvt.so|/system/lib64/libshims_ims.so \
+     /system/vendor/lib64/lib-imsdpl.so|/system/lib64/libshims_boringssl.so \
+     /system/lib64/lib-imsvideocodec.so|libshim_ui.so \
+     /system/lib64/libimsmedia_jni.so|/system/lib64/libshim_libimsmedia.so \
+     /system/lib64/lib-imsvt.so|/system/lib64/libshim_libimsmedia.so
+endif
+
 # SELinux
-include device/qcom/sepolicy-legacy/sepolicy.mk
-BOARD_SEPOLICY_DIRS += $(COMMON_PATH)/sepolicy/vendor
+#include device/qcom/sepolicy-legacy/sepolicy.mk
+#BOARD_SEPOLICY_DIRS += $(COMMON_PATH)/sepolicy/vendor
+BOARD_SEPOLICY_DIRS += $(COMMON_PATH)/sepolicy-minimal
 SELINUX_IGNORE_NEVERALLOWS := true
 
 # WiFi
@@ -216,6 +246,7 @@ BOARD_WPA_SUPPLICANT_DRIVER := NL80211
 BOARD_WPA_SUPPLICANT_PRIVATE_LIB := lib_driver_cmd_$(BOARD_WLAN_DEVICE)
 BOARD_HOSTAPD_DRIVER        := NL80211
 BOARD_HOSTAPD_PRIVATE_LIB   := lib_driver_cmd_$(BOARD_WLAN_DEVICE)
+WIFI_DRIVER_BUILT           := brcmfmac
 WIFI_DRIVER_FW_PATH_PARAM   := "/sys/module/bcmdhd/parameters/firmware_path"
 WIFI_DRIVER_FW_PATH_AP      := "/system/etc/firmware/wlan/bcmdhd/fw_bcmdhd_apsta.bin"
 WIFI_DRIVER_FW_PATH_STA     := "/system/etc/firmware/wlan/bcmdhd/fw_bcmdhd.bin"
