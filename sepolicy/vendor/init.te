@@ -8,14 +8,10 @@ allow init debugfs:file w_file_perms;
 #TAD
 allow init tad_socket:sock_file create;
 
-#Torch
-allow init sysfs_camera_torch:lnk_file read;
-
 allow init trim_area_partition_device:blk_file { write setattr };
 allow init block_device:blk_file setattr;
 allow init socket_device:sock_file { create setattr };
 allow init socket_device:sock_file unlink;
-allow init cameraserver:fd use;
 allow init diag_data_file:file { lock rename };
 allow init diag_data_file:sock_file write;
 allow init ion_device:chr_file ioctl;
@@ -33,7 +29,6 @@ allow init vfat:file { getattr open read };
 allow init proc_interrupts:file getattr;
 allow init diag_data_file:dir mounton;
 allow init hal_drm_hwservice:hwservice_manager add;
-allow init hal_fingerprint_hwservice:hwservice_manager add;
 allow init hal_light_hwservice:hwservice_manager add;
 allow init hidl_base_hwservice:hwservice_manager add;
 allow init hwservicemanager:binder { call transfer };
@@ -46,10 +41,8 @@ allow init sysfs_graphics:file { open read write };
 allow init tee_device:chr_file { open read };
 allow init vendor_file:file execute_no_trans;
 allow init vndbinder_device:chr_file { ioctl open read write };
-allow init fingerprintd_data_file:file rename;
 allow init system_server:binder call;
 allow init hal_drm_hwservice:hwservice_manager { add find };
-allow init hal_fingerprint_hwservice:hwservice_manager { add find };
 allow init iorapd_data_file:file rw_file_perms;
 allow init system_file:dir relabelfrom;
 allow init system_file:file { execute_no_trans relabelfrom };

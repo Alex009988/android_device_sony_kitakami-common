@@ -100,20 +100,12 @@ BOARD_CUSTOM_BT_CONFIG := $(COMMON_PATH)/bluetooth/vnd_generic.txt
 BOARD_HAVE_BLUETOOTH := true
 BOARD_HAVE_BLUETOOTH_BCM := true
 
-# Camera
-BOARD_QTI_CAMERA_32BIT_ONLY := true
-TARGET_USES_MEDIA_EXTENSIONS := true
-USE_DEVICE_SPECIFIC_CAMERA := true
-
 TARGET_PROCESS_SDK_VERSION_OVERRIDE := \
-    /system/bin/cameraserver=25 \
-    /system/bin/cameraserver_kitakami=25 \
     /system/bin/mediaserver=25 \
     /system/bin/iddd=25 \
     /system/bin/secd=25 \
     /system/bin/tad_static=25 \
     /system/bin/loc_launcher=25 \
-    /system/bin/mm-qcamera-daemon=25 \
     /system/bin/sensors.qcom=25
 
 # Charger
@@ -160,10 +152,6 @@ PRODUCT_ENFORCE_VINTF_MANIFEST_OVERRIDE := true
 DEVICE_FRAMEWORK_COMPATIBILITY_MATRIX_FILE := \
     $(COMMON_PATH)/device_framework_compatibility_matrix.xml \
     hardware/qcom-caf/common/vendor_framework_compatibility_matrix_legacy.xml
-
-ifneq ($(BOARD_HAVE_RADIO),false)
-DEVICE_MANIFEST_FILE += $(COMMON_PATH)/manifest_radio.xml
-endif
 
 # Init
 TARGET_PLATFORM_DEVICE_BASE := /devices/soc.0/
@@ -214,8 +202,6 @@ TARGET_USERIMAGES_USE_EXT4 := true
 
 # Shims
 TARGET_LD_SHIM_LIBS := \
-     /system/vendor/lib/hw/camera.vendor.msm8994.so|/system/lib/camera.qcom_shim.so \
-     /system/vendor/lib/hw/camera.vendor.msm8994.so|/system_ext/lib/libui_shim.so \
      /system/lib64/libsys-utils.so|libsensor.so \
      /system/lib/libcammw.so|libsensor.so \
      /system/bin/secd|/system/lib64/lib-preload64.so \
@@ -224,15 +210,6 @@ TARGET_LD_SHIM_LIBS := \
      /system/lib64/libsys-utils.so|libshim_sensors.so \
      /system/lib/libcammw.so|libshim_sensors.so \
      /system/vendor/lib64/libmm-abl.so|libshims_postproc.so
-
-ifneq ($(BOARD_HAVE_RADIO),false)
-TARGET_LD_SHIM_LIBS += \
-     /system/vendor/lib64/lib-imsvt.so|/system/lib64/libshims_ims.so \
-     /system/vendor/lib64/lib-imsdpl.so|/system/lib64/libshims_boringssl.so \
-     /system/lib64/lib-imsvideocodec.so|libshim_ui.so \
-     /system/lib64/libimsmedia_jni.so|/system/lib64/libshim_libimsmedia.so \
-     /system/lib64/lib-imsvt.so|/system/lib64/libshim_libimsmedia.so
-endif
 
 # SELinux
 #include device/qcom/sepolicy-legacy/sepolicy.mk

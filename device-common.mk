@@ -37,8 +37,6 @@ PRODUCT_ENFORCE_RRO_EXCLUDED_OVERLAYS += \
 # Permissions
 PRODUCT_COPY_FILES += \
     frameworks/native/data/etc/android.hardware.bluetooth_le.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.bluetooth_le.xml \
-    frameworks/native/data/etc/android.hardware.camera.flash-autofocus.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.camera.flash-autofocus.xml \
-    frameworks/native/data/etc/android.hardware.camera.front.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.camera.front.xml \
     frameworks/native/data/etc/android.hardware.ethernet.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.ethernet.xml \
     frameworks/native/data/etc/android.hardware.location.gps.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.location.gps.xml \
     frameworks/native/data/etc/android.hardware.nfc.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.nfc.xml \
@@ -116,16 +114,6 @@ PRODUCT_PACKAGES += \
     android.hardware.bluetooth@1.0-service \
     libbt-vendor
 
-# Camera
-PRODUCT_PACKAGES += \
-    android.hardware.camera.provider@2.4-service \
-    android.hardware.camera.provider@2.4-impl-kitakami:32 \
-    camera.msm8994 \
-    Aperture \
-    libyuv \
-    libexif \
-    vendor.qti.hardware.camera.device@1.0
-
 # Charger
 PRODUCT_PACKAGES += charger_res_images
 
@@ -201,13 +189,6 @@ PRODUCT_PACKAGES += \
     libhidltransport \
     libhwbinder \
     vndservicemanager
-
-# IMS
-PRODUCT_PACKAGES += \
-    libbase_shim \
-    libshim_ui \
-    libshims_ims \
-    libshim_libimsmedia
 
 # Init
 PRODUCT_COPY_FILES += \
@@ -329,7 +310,6 @@ PRODUCT_PACKAGES += \
 
 # Shim libs
 PRODUCT_PACKAGES += \
-   camera.qcom_shim \
    libui_shim
 
 # Soong
