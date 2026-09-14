@@ -18,6 +18,7 @@
 #define ANDROID_HARDWARE_CAMERA_DEVICE_V1_0_CAMERADEVICE_H
 
 #include <unordered_map>
+#include "utils/Condition.h"
 #include "utils/Mutex.h"
 #include "utils/SortedVector.h"
 #include "CameraModule.h"
@@ -150,6 +151,10 @@ private:
         sp<ICameraDevicePreviewCallback> mPreviewCallback = nullptr;
         std::unordered_map<uint64_t, buffer_handle_t> mCirculatingBuffers;
         std::unordered_map<buffer_handle_t*, uint64_t> mBufferIdMap;
+
+        Mutex mFrameLock;
+        Condition mFrameCond;
+        uint32_t mFrameCount = 0;
     } mHalPreviewWindow;
 
     // gating access to mDevice, mInitFail, mDisconnected
@@ -170,13 +175,10 @@ private:
     std::unordered_map<MemoryId, CameraHeapMemory*> mMemoryMap;
 
     bool mMetadataMode = false;
-<<<<<<< HEAD
-=======
     bool mFrameRatePending = false;
     bool mExtension = false;
     int mMemorySlot = -1;
     std::unordered_map<CameraHeapMemory*, MemoryId> mForeignMemory;
->>>>>>> 2e08803... kitakami-common: Add the stock Sony camera app with its extension service and HAL sessions
 
     mutable Mutex mBatchLock;
     // Start of protection scope for mBatchLock
@@ -247,12 +249,9 @@ private:
     static status_t getStatusT(const Status& s);
 
     Status initStatus() const;
-<<<<<<< HEAD
-=======
     std::string getParametersLocked();
     int setParametersLocked(const std::string& params);
     bool sonyParametersLocked() const;
->>>>>>> 2e08803... kitakami-common: Add the stock Sony camera app with its extension service and HAL sessions
     void closeLocked();
 };
 
